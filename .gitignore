@@ -1,0 +1,19 @@
+# Visual Studio 2015 cache/options directory
+.vs/
+# Uncomment if you have tasks that create the project's static files in wwwroot
+#wwwroot/
+
+node_modules/
+
+### macOS template
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+=======
+# Local
+docker-compose.yml
+.env
+dist
+sendgrid.env

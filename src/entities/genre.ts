@@ -2,8 +2,8 @@ import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne
 import {place_filter} from "./place_filter";
 
 
-@Entity("filter",{schema:"public"})
-export class filter {
+@Entity("genre",{schema:"public"})
+export class genre {
 
     @PrimaryGeneratedColumn({
         type:"smallint", 

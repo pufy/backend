@@ -17,6 +17,14 @@ export class PlaceService {
   async getPlacesAround(lat, long, range) {
     return await this.placeRepository
     .createQueryBuilder("place")
+    .select("place.id", "id")
+    .addSelect("place.name", "name")
+    .addSelect("place.photo", "photo")
+    .addSelect("place.latitude", "latitude")
+    .addSelect("place.longitude", "longitude")
+    .addSelect("type_place.type", "type_name")
+    .addSelect("type_place.icon", "type_icon")
+    .innerJoin("place.fk_type", "type_place")
     .where("earth_box( ll_to_earth(:lat, :long), :range) @> ll_to_earth(place.latitude, place.longitude)", 
     { lat: lat, long: long, range: range })
     .orderBy('earth_distance(ll_to_earth(latitude, longitude), ll_to_earth('+lat+', '+long+'))')

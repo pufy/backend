@@ -27,7 +27,7 @@ export class place {
         name:"name"
         })
     name:string;
-        
+  
 
     @Column("character varying",{ 
         nullable:true,
@@ -35,15 +35,18 @@ export class place {
         name:"photo"
         })
     photo:string | null;
-        
 
-    @Column("point",{ 
-        nullable:false,
-        name:"location"
+    @Column("float",{ 
+        nullable:true,
+        name:"latitude"
         })
-    location:string | Object;
+    latitude:string;
         
-
+    @Column("float",{ 
+        nullable:true,
+        name:"longitude"
+        })
+    longitude:string;
    
     @ManyToOne(type=>type_place, type_place=>type_place.places,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
     @JoinColumn({ name:'fk_type'})

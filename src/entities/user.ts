@@ -45,6 +45,20 @@ export class user {
         name:"telephone"
         })
     telephone:string | null;
+
+    @Column("character varying",{ 
+        nullable:true,
+        length:255,
+        name:"code_confirm"
+        })
+    code_confirm:string;
+
+    @Column("character varying",{ 
+        nullable:true,
+        length:100,
+        name:"password"
+        })
+    password:string;
         
 
    

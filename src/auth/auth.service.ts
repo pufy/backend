@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Connection } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Connection, Repository } from 'typeorm';
 
+import { session_spotify } from "../entities/session_spotify";
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
@@ -13,8 +15,9 @@ export class AuthService {
     private readonly connection: Connection,
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
-    ){
-  }
+    @InjectRepository(session_spotify)
+    private readonly sessionSpotifyRepository: Repository<session_spotify>,
+    ){}
   
   async login(auth: LoginDto) {
     return await this.connection.query(`
@@ -62,6 +65,16 @@ export class AuthService {
     } finally {
         await queryRunner.release();
     }    
+  }
+
+  async createSessionSpotify(access_token, refresh_token, fk_place, fk_account_spotify){
+    return await this.sessionSpotifyRepository.save({
+      date_register: new Date(),
+      token: access_token,
+      refresh_token: refresh_token,
+      fk_place: fk_place,
+      fk_account_spotify: fk_account_spotify
+    });
   }
 
   async validateUser(token: string): Promise<any> {

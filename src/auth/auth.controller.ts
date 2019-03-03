@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Param, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Res, HttpStatus, UseGuards, Req } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -15,6 +16,16 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly jwtService: JwtService) {
     }
+
+  @Get('/spotify/login')
+  @UseGuards(AuthGuard('spotify'))
+  async loginWithSpotify() { }
+
+  @Get('/spotify/callback')
+  @UseGuards(AuthGuard('spotify'))
+  async loginWithSpotifyCallback(@Req() req, @Res() res) {
+    res.redirect('/')
+  }
 
   @Post()
   async login(@Body() auth: LoginDto) {

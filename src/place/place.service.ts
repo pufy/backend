@@ -2,18 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Place } from "./entitys/place.entity";
+import { place } from "../entities/place";
 
 @Injectable()
 export class PlaceService {
 
   constructor(
-    @InjectRepository(Place)
-    private readonly placeRepository: Repository<Place>
+    @InjectRepository(place)
+    private readonly placeRepository: Repository<place>
     ){
   }
 
-  async findAll(): Promise<Place[]> {
-    return await this.placeRepository.find();
+  async getPlacesAround(lat, long, range) {
+    return await this.placeRepository
+    .createQueryBuilder("place")
+    .where("earth_box( ll_to_earth(:lat, :long), :range) @> ll_to_earth(place.latitude, place.longitude)", 
+    { lat: lat, long: long, range: range })
+    .orderBy('earth_distance(ll_to_earth(latitude, longitude), ll_to_earth('+lat+', '+long+'))')
+    .execute();
   }
 }

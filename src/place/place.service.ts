@@ -77,6 +77,36 @@ export class PlaceService {
     .execute();
   }
 
+  async getPlacesRecommended(user_id, lat, long, range) {
+    let checkins = await this.memberRepository.find({ relations: ["checkins", "fk_place"], where: { fk_user: user_id } });
+    let checkinsCount: member;
+    checkins.map(checkin => {
+      if(!checkinsCount || checkin.checkins.length > checkinsCount.checkins.length)
+        checkinsCount = checkin;
+    });
+    
+    let topPlace: place = await this.placeRepository.findOne({ where: { id: checkinsCount.fk_place.id }, relations: ["fk_type"] });
+    
+    return await this.placeRepository
+    .createQueryBuilder("place")
+    .select("place.id", "id")
+    .addSelect("place.name", "name")
+    .addSelect("place.color", "color")
+    .addSelect("place.photo", "photo")
+    .addSelect("place.latitude", "latitude")
+    .addSelect("place.longitude", "longitude")
+    .addSelect("type_place.type", "type_name")
+    .addSelect("type_place.icon", "type_icon")
+    .innerJoin("place.fk_type", "type_place")
+    .innerJoin("member", "member", "member.fk_user = :userId and member.fk_place = :placeTopId", { userId: user_id, placeTopId: topPlace.id })
+    .leftJoin("member", "member_ref", "member_ref.fk_user = :userId and member_ref.fk_place = place.id", { userId: user_id })
+    .where(`earth_box( ll_to_earth(:lat, :long), :range) @> ll_to_earth(place.latitude, place.longitude)
+      and place.fk_type = :placeTopType and member_ref.id is null`, 
+      { lat: lat, long: long, range: range, placeTopType: topPlace.fk_type.id })
+    .orderBy('earth_distance(ll_to_earth(latitude, longitude), ll_to_earth('+lat+', '+long+'))')
+    .execute()
+  }
+
   async getGenres(placeId){
     return await this.placeFilterRepository
     .createQueryBuilder("place_filter")

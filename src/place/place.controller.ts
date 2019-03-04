@@ -16,6 +16,13 @@ export class PlaceController {
     return await this.placeService.getPlacesAround(lat, long, range);
   }
 
+  @Get('recommended')
+  @UseGuards(AuthGuard('bearer'), RolesGuard)
+  async getPlacesRecommended(@Req() request, @Query('lat') lat, @Query('long') long): Promise<Object> {
+    let range = 4000;
+    return await this.placeService.getPlacesRecommended(request.user.id, lat, long, range);
+  }
+
   @Post(':place_id/checkin')
   @UseGuards(AuthGuard('bearer'), RolesGuard)
   async checkin(@Req() request, @Param('place_id') placeId){

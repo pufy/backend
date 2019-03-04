@@ -1,41 +1,49 @@
 import { Injectable, Inject } from '@nestjs/common';
-import * as SpotifyWebApi from "spotify-web-api-node";
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 
-import { user } from "../entities/user";
 import { QueueAddTrackDto } from './dto/queue-add-track.dto';
+import { place } from '../entities/place';
+import { session_spotify } from '../entities/session_spotify';
+import { SpotifyService } from './spotify.service';
+import { PlaceService } from '../place/place.service';
 
 @Injectable()
 export class PlayerService {
 
-  spotify;
-
   constructor(
-    /*@InjectRepository(user)
-    private readonly userRepository: Repository<user>,*/
-		private readonly connection: Connection,
+    @InjectRepository(place) private readonly placeRepository: Repository<place>,
+    @InjectRepository(session_spotify) private readonly sessionSpotifyRepository: Repository<session_spotify>,
     @Inject('RedisProvider') private readonly redis,
-    @Inject('ConfigService') private readonly config
+    @Inject('ConfigService') private readonly config,
+    private readonly spotifyService: SpotifyService,
+    private readonly placeService: PlaceService
     ){
   }
 
-  public async getQueueByPlace(placeId) {
-    return await this.redis.lrangeAsync(`queue:${placeId}`, 0, -1)
-    .then(queque => queque.map(item => JSON.parse(item)))
-  }
-
-  async queueAdd(placeId, track: QueueAddTrackDto) {
-    return await this.redis.rpushAsync(`queue:${placeId}`, JSON.stringify(track));
-  }
-  
-  public init(accessToken, refreshToken){
-    this.spotify = new SpotifyWebApi()
-    this.spotify.setClientId(this.config.spotify.client_id);
-    this.spotify.setClientSecret(this.config.spotify.client_secret);
-    this.spotify.setRedirectURI(this.config.spotify.callback_url);
-    this.spotify.setAccessToken(accessToken);
-    this.spotify.setRefreshToken(refreshToken);
+  async searchTrackByPlace(placeId, track){
+    let spotify = await this.spotifyService.init(placeId);
+    //let genres = await this.placeService.getGenres(placeId);
+    
+    if(spotify != 'SESSION_NOT_EXIST'){
+      return spotify.searchTracks(`${track}`)
+      .then((data) => {
+        return data.body.tracks.items.map(item => {
+          return {
+            'id': item.id,
+            'name': item.name,
+            'artist': item.artists.map(a => a.name),
+            'album': item.album.name + ' - ' + item.album.release_date.split("-")[0],
+            'duration_ms': item.duration_ms,
+            'image': item.album.images.map(a => a.url)
+          }
+        })
+      }, (err) => { 
+        if(err.statusCode == 400) return 'IS_NOT_FOUND'
+        else return 'ERROR_SPOTIFY_CLOSED';
+      });
+    }
+    else return 'SESSION_NOT_EXIST'; 
   }
 
 }

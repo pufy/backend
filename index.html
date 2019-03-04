@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Spotify</title>
+  <meta charset="utf-8" />
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+<script>
+  const socket = io('http://localhost:3300/queue', { 
+		query: "place=2",
+		'forceNew': true 
+	});
+  let current_song_id = null
+  var track;
+
+  fetch('http://localhost:3300/v1/player/place/2/search/track?track=atrevete')
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+    track = myJson.payload;
+    console.log(track);
+  });
+
+  socket.on('queue:2', (data) => {
+    console.log(data);
+  })
+
+  const addQueque = (id) =>{
+		fetch('http://localhost:3300/v1/player/place/2/queue', { 
+			method: 'POST',
+			body: JSON.stringify({ track: track[0] }),
+			headers:{ 'Content-Type': 'application/json' }
+		 })
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(myJson) {
+			console.log(myJson);
+		});
+  }
+</script>
+
+<body>
+  SPOTIFY
+  <button onclick="addQueque()">Agregar a la cola</button>
+  <!--<button onclick="votar()">Votar</button>-->
+</body>
+
+</html>

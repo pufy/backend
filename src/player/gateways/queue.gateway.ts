@@ -7,30 +7,28 @@ import {
 
 import { InjectEventEmitter } from 'nest-emitter';
 import { QueueEmitter } from '../events/queue.event';
-import { PlayerService } from '../player.service'
+import { QueueService } from '../queue.service'
   
-@WebSocketGateway()
+@WebSocketGateway({ namespace: 'queue' })
 export class QueueGateway implements OnModuleInit {
 
   @WebSocketServer() server;
 
 	constructor(
 			@InjectEventEmitter() private readonly emitter: QueueEmitter,
-			private playerService: PlayerService
+			private queueService: QueueService
 	){}
 
 	onModuleInit() {
-		this.emitter.on('queue', async msg => await this.onNotification(msg));
-		//this.emitter.on('newRequest', async req => await this.onRequest(req));
-	}
-    
-	private async onNotification(queue) {
-		console.log(queue);
-		
-		//this.server.emit(`queue:${queue.user_id}`, notification);
+		this.emitter.on("queue_add", async data => await this.onQueueAdd(data));
 	}
 	
-	private async onRequest(req: Express.Request) {
-		//console.log(`OnRequest from: ${req['ip']}`);
+	private async onQueueAdd(data) {
+		this.server.emit(`queue:${data.placeId}`, data.track);
 	}
+
+	async handleConnection(client) {
+		let placeId = client.handshake.query.place;
+		client.emit(`queue:${placeId}`, await this.queueService.getQueueByPlace(placeId))
+  }
 }

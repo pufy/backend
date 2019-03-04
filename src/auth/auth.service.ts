@@ -68,13 +68,24 @@ export class AuthService {
   }
 
   async createSessionSpotify(access_token, refresh_token, fk_place, fk_account_spotify){
-    return await this.sessionSpotifyRepository.save({
-      date_register: new Date(),
-      token: access_token,
-      refresh_token: refresh_token,
-      fk_place: fk_place,
-      fk_account_spotify: fk_account_spotify
-    });
+    let session = await this.sessionSpotifyRepository.find({ where: { fk_place: fk_place } });
+    if(session.length > 0){
+      return await this.sessionSpotifyRepository  
+      .createQueryBuilder()
+      .update()
+      .set({ token: access_token, refresh_token: refresh_token, date_register: new Date(),  })
+      .where("fk_place = :id", { id: fk_place })
+      .execute();
+    } else {
+      return await this.sessionSpotifyRepository.save({
+        date_register: new Date(),
+        token: access_token,
+        refresh_token: refresh_token,
+        fk_place: fk_place,
+        fk_account_spotify: fk_account_spotify
+      });
+    }
+    
   }
 
   async validateUser(token: string): Promise<any> {

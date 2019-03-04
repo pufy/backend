@@ -1,6 +1,6 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
 import {place} from "./place";
-import {filter} from "./filter";
+import {genre} from "./genre";
 
 
 @Entity("place_filter",{schema:"public"})
@@ -20,8 +20,8 @@ export class place_filter {
 
 
    
-    @ManyToOne(type=>filter, filter=>filter.place_filters,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
+    @ManyToOne(type=>genre, filter=>filter.place_filters,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
     @JoinColumn({ name:'fk_filter'})
-    fk_filter:filter | null;
+    fk_filter:genre | null;
 
 }

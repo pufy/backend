@@ -1,6 +1,7 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
 import {user} from "./user";
 import {place} from "./place";
+import {checkin} from "./checkin";
 
 
 @Entity("member",{schema:"public"})
@@ -19,6 +20,13 @@ export class member {
     fk_user:user | null;
 
 
+    @Column("timestamp without time zone",{ 
+        nullable:false,
+        name:"date_register"
+        })
+    date_register:Date;
+        
+
    
     @ManyToOne(type=>place, place=>place.members,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
     @JoinColumn({ name:'fk_place'})
@@ -32,10 +40,8 @@ export class member {
     notify:boolean | null;
         
 
-    @Column("timestamp without time zone",{ 
-        nullable:false,
-        name:"date_register"
-        })
-    date_register:Date;
-        
+   
+    @OneToMany(type=>checkin, checkin=>checkin.fk_member)
+    checkins:checkin[];
+    
 }

@@ -6,13 +6,6 @@ import {place} from "./place";
 @Entity("reservation",{schema:"public"})
 export class reservation {
 
-    @PrimaryGeneratedColumn({
-        type:"bigint", 
-        name:"id"
-        })
-    id:string;
-        
-
    
     @ManyToOne(type=>user, user=>user.reservations,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
     @JoinColumn({ name:'fk_user'})
@@ -25,13 +18,6 @@ export class reservation {
     fk_place:place | null;
 
 
-    @Column("smallint",{ 
-        nullable:true,
-        name:"total_person"
-        })
-    total_person:number | null;
-        
-
     @Column("character varying",{ 
         nullable:true,
         length:80,
@@ -40,12 +26,26 @@ export class reservation {
     message_user:string | null;
         
 
+    @PrimaryGeneratedColumn({
+        type:"bigint", 
+        name:"id"
+        })
+    id:string;
+        
+
     @Column("character varying",{ 
         nullable:true,
         length:80,
         name:"message_place"
         })
     message_place:string | null;
+        
+
+    @Column("smallint",{ 
+        nullable:true,
+        name:"total_person"
+        })
+    total_person:number | null;
         
 
     @Column("smallint",{ 

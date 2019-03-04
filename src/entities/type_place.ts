@@ -5,19 +5,19 @@ import {place} from "./place";
 @Entity("type_place",{schema:"public"})
 export class type_place {
 
-    @PrimaryGeneratedColumn({
-        type:"integer", 
-        name:"id"
-        })
-    id:number;
-        
-
     @Column("character varying",{ 
         nullable:false,
         length:40,
         name:"type"
         })
     type:string;
+        
+
+    @PrimaryGeneratedColumn({
+        type:"integer", 
+        name:"id"
+        })
+    id:number;
         
 
     @Column("character varying",{ 

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 
+import { user } from "../entities/user";
 import { session_spotify } from "../entities/session_spotify";
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -17,25 +18,20 @@ export class AuthService {
     private readonly userService: UserService,
     @InjectRepository(session_spotify)
     private readonly sessionSpotifyRepository: Repository<session_spotify>,
+    @InjectRepository(user)
+    private readonly userRepository: Repository<user>
     ){}
   
   async login(auth: LoginDto) {
-    return await this.connection.query(`
-      select 
-        us.id,
-        us.correo,
-        p.id as persona_id,
-        p.genero,
-        p.nombres,
-        p.apellidos,
-        p.foto
-      from usuario us
-      inner join persona p on p.id = us.fk_persona
-      inner join usuario_rol ur on ur.fk_usuario = us.id
-      inner join rol r on r.id = ur.fk_rol
-      where us.correo = '${auth.correo}' and us.contrasena = '${auth.contrasena}' and us.estado = 1
-      GROUP BY us.id, p.id
-    `);	
+    return await this.userRepository
+    .createQueryBuilder("user")
+    .select("user.id", "id")
+    .addSelect("user.email", "email")
+    .addSelect("user.names", "names")
+    .addSelect("user.lastnames", "lastnames")
+    .where("email = :email and password = :password", { email: auth.correo, password: auth.contrasena })
+    .execute();
+    
   }
 
   async signup(user: SignupDto, code_confirm: string){

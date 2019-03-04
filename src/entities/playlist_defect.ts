@@ -6,18 +6,18 @@ export class playlist_defect {
 
     @Column("character varying",{ 
         nullable:false,
-        length:255,
-        name:"id_playlist"
-        })
-    id_playlist:string;
-        
-
-    @Column("character varying",{ 
-        nullable:false,
         length:100,
         name:"name"
         })
     name:string;
+        
+
+    @Column("character varying",{ 
+        nullable:false,
+        length:255,
+        name:"id_playlist"
+        })
+    id_playlist:string;
         
 
     @PrimaryGeneratedColumn({

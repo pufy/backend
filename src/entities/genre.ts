@@ -5,19 +5,19 @@ import {place_filter} from "./place_filter";
 @Entity("genre",{schema:"public"})
 export class genre {
 
-    @PrimaryGeneratedColumn({
-        type:"smallint", 
-        name:"id"
-        })
-    id:number;
-        
-
     @Column("character varying",{ 
         nullable:false,
         length:50,
         name:"name"
         })
     name:string;
+        
+
+    @PrimaryGeneratedColumn({
+        type:"smallint", 
+        name:"id"
+        })
+    id:number;
         
 
    

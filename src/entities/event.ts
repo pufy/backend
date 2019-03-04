@@ -5,18 +5,14 @@ import {place} from "./place";
 @Entity("event",{schema:"public"})
 export class event {
 
-    @PrimaryGeneratedColumn({
-        type:"bigint", 
-        name:"id"
+    @Column("numeric",{ 
+        nullable:true,
+        precision:255,
+        scale:0,
+        name:"cover"
         })
-    id:string;
+    cover:string | null;
         
-
-   
-    @ManyToOne(type=>place, place=>place.events,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
-    @JoinColumn({ name:'fk_place'})
-    fk_place:place | null;
-
 
     @Column("character varying",{ 
         nullable:false,
@@ -34,6 +30,13 @@ export class event {
     photo:string | null;
         
 
+    @PrimaryGeneratedColumn({
+        type:"bigint", 
+        name:"id"
+        })
+    id:string;
+        
+
     @Column("timestamp without time zone",{ 
         nullable:true,
         name:"date_init"
@@ -41,12 +44,9 @@ export class event {
     date_init:Date | null;
         
 
-    @Column("numeric",{ 
-        nullable:true,
-        precision:255,
-        scale:0,
-        name:"cover"
-        })
-    cover:string | null;
-        
+   
+    @ManyToOne(type=>place, place=>place.events,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
+    @JoinColumn({ name:'fk_place'})
+    fk_place:place | null;
+
 }

@@ -5,12 +5,11 @@ import {place} from "./place";
 @Entity("playlist",{schema:"public"})
 export class playlist {
 
-    @Column("character varying",{ 
+    @Column("timestamp without time zone",{ 
         nullable:false,
-        length:255,
-        name:"id_playlist"
+        name:"date_register"
         })
-    id_playlist:string;
+    date_register:Date;
         
 
    
@@ -19,11 +18,12 @@ export class playlist {
     fk_place:place | null;
 
 
-    @Column("timestamp without time zone",{ 
+    @Column("character varying",{ 
         nullable:false,
-        name:"date_register"
+        length:255,
+        name:"id_playlist"
         })
-    date_register:Date;
+    id_playlist:string;
         
 
     @PrimaryGeneratedColumn({

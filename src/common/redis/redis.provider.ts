@@ -16,7 +16,7 @@ promisifyAll(Multi.prototype);
       });
       redisClient.on('ready', () => logger.log('Connected'));
       redisClient.on('error', e => logger.error(e.message, e.stack));
-      redisClient.flushall()
+      //redisClient.flushall()
       return redisClient;
     },
     inject:['ConfigService']

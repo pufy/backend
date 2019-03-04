@@ -10,6 +10,7 @@ import { PlayerService } from './player.service';
 import { QueueService } from './queue.service';
 import { SpotifyService } from './spotify.service';
 import { PlaceService } from '../place/place.service';
+import { QueueGateway } from './gateways/queue.gateway';
 
 @Module({
   imports: [
@@ -17,6 +18,12 @@ import { PlaceService } from '../place/place.service';
     CommonModule
   ],
   controllers: [PlayerController],
-  providers: [PlayerService, QueueService, SpotifyService, PlaceService],
+  providers: [
+    PlayerService, 
+    QueueService, 
+    SpotifyService, 
+    PlaceService, 
+    QueueGateway,
+  ],
 })
 export class PlayerModule {}

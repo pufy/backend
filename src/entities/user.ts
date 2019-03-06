@@ -8,11 +8,12 @@ import {reservation} from "./reservation";
 @Entity("user",{schema:"public"})
 export class user {
 
-    @PrimaryGeneratedColumn({
-        type:"bigint", 
-        name:"id"
+    @Column("character varying",{ 
+        nullable:true,
+        length:15,
+        name:"telephone"
         })
-    id:string;
+    telephone:string | null;
         
 
     @Column("character varying",{ 
@@ -24,11 +25,32 @@ export class user {
         
 
     @Column("character varying",{ 
+        nullable:true,
+        length:100,
+        name:"password"
+        })
+    password:string | null;
+        
+
+   
+    @ManyToOne(type=>rol, rol=>rol.users,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
+    @JoinColumn({ name:'fk_rol'})
+    fk_rol:rol | null;
+
+
+    @Column("character varying",{ 
         nullable:false,
         length:60,
         name:"lastnames"
         })
     lastnames:string;
+        
+
+    @PrimaryGeneratedColumn({
+        type:"bigint", 
+        name:"id"
+        })
+    id:string;
         
 
     @Column("character varying",{ 
@@ -41,31 +63,11 @@ export class user {
 
     @Column("character varying",{ 
         nullable:true,
-        length:15,
-        name:"telephone"
-        })
-    telephone:string | null;
-
-    @Column("character varying",{ 
-        nullable:true,
         length:255,
         name:"code_confirm"
         })
-    code_confirm:string;
-
-    @Column("character varying",{ 
-        nullable:true,
-        length:100,
-        name:"password"
-        })
-    password:string;
+    code_confirm:string | null;
         
-
-   
-    @ManyToOne(type=>rol, rol=>rol.users,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
-    @JoinColumn({ name:'fk_rol'})
-    fk_rol:rol | null;
-
 
     @Column("timestamp without time zone",{ 
         nullable:false,

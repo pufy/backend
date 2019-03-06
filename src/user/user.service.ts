@@ -19,18 +19,18 @@ export class UserService {
   }
 
   async validUser(jwtPayload: any){
-    let responseQuery = await this.connection.query(`
-      select
-        array_to_json(ARRAY_AGG(r.nombre)) as roles
-      from usuario u
-      inner join usuario_rol ur on ur.fk_usuario = u.id
-      inner join rol r on r.id = ur.fk_rol
-      where u.id = ${ jwtPayload.id }
-      group by u.id;
-    `);
+    let response = await this.userRepository
+    .createQueryBuilder("user")
+    .select("user.id", "id")
+    .addSelect("user.names", "names")
+    .addSelect("user.lastnames", "lastnames")
+    .addSelect("user.email", "email")
+    .where("user.id = :user_id", { user_id: jwtPayload.id })
+    .groupBy("user.id")
+    .execute();
     
-    if(responseQuery.length > 0){
-      jwtPayload.roles = responseQuery[0].roles;
+    if(response.length > 0){
+      //jwtPayload.roles = response[0].roles;
       return jwtPayload;
     }
     return false;

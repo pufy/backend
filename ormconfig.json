@@ -1,0 +1,16 @@
+[
+  {
+    "name": "default",
+    "type": "postgres",
+    "host": "pufy.ga",
+    "port": 5432,
+    "username": "postgres",
+    "password": "proteus28",
+    "database": "pufy",
+    "schema": "public",
+    "synchronize": false,
+    "entities": [
+      "entities/*.js"
+    ]
+  }
+]

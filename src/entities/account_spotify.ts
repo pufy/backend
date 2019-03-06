@@ -5,21 +5,6 @@ import {session_spotify} from "./session_spotify";
 @Entity("account_spotify",{schema:"public"})
 export class account_spotify {
 
-    @PrimaryGeneratedColumn({
-        type:"bigint", 
-        name:"id"
-        })
-    id:string;
-        
-
-    @Column("character varying",{ 
-        nullable:false,
-        length:255,
-        name:"email"
-        })
-    email:string;
-        
-
     @Column("character varying",{ 
         nullable:false,
         length:255,
@@ -28,11 +13,26 @@ export class account_spotify {
     password:string;
         
 
+    @PrimaryGeneratedColumn({
+        type:"bigint", 
+        name:"id"
+        })
+    id:string;
+        
+
     @Column("timestamp without time zone",{ 
         nullable:false,
         name:"date_register"
         })
     date_register:Date;
+        
+
+    @Column("character varying",{ 
+        nullable:false,
+        length:255,
+        name:"email"
+        })
+    email:string;
         
 
    

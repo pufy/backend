@@ -1,6 +1,6 @@
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId} from "typeorm";
-import {type_place} from "./type_place";
 import {user} from "./user";
+import {type_place} from "./type_place";
 import {catalog} from "./catalog";
 import {event} from "./event";
 import {galery} from "./galery";
@@ -14,43 +14,10 @@ import {session_spotify} from "./session_spotify";
 @Entity("place",{schema:"public"})
 export class place {
 
-    @PrimaryGeneratedColumn({
-        type:"bigint", 
-        name:"id"
-        })
-    id:string;
-        
-
-    @Column("character varying",{ 
-        nullable:false,
-        length:60,
-        name:"name"
-        })
-    name:string;
-  
-
-    @Column("character varying",{ 
-        nullable:true,
-        length:255,
-        name:"photo"
-        })
-    photo:string | null;
-
-    @Column("float",{ 
-        nullable:true,
-        name:"latitude"
-        })
-    latitude:string;
-        
-    @Column("float",{ 
-        nullable:true,
-        name:"longitude"
-        })
-    longitude:string;
    
-    @ManyToOne(type=>type_place, type_place=>type_place.places,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
-    @JoinColumn({ name:'fk_type'})
-    fk_type:type_place | null;
+    @ManyToOne(type=>user, user=>user.places,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
+    @JoinColumn({ name:'fk_representative'})
+    fk_representative:user | null;
 
 
     @Column("timestamp without time zone",{ 
@@ -60,11 +27,58 @@ export class place {
     date_register:Date;
         
 
-   
-    @ManyToOne(type=>user, user=>user.places,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
-    @JoinColumn({ name:'fk_representative'})
-    fk_representative:user | null;
+    @PrimaryGeneratedColumn({
+        type:"bigint", 
+        name:"id"
+        })
+    id:string;
+        
 
+    @Column("double precision",{ 
+        nullable:true,
+        precision:53,
+        name:"latitude"
+        })
+    latitude:number | null;
+        
+
+   
+    @ManyToOne(type=>type_place, type_place=>type_place.places,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
+    @JoinColumn({ name:'fk_type'})
+    fk_type:type_place | null;
+
+
+    @Column("character varying",{ 
+        nullable:true,
+        length:60,
+        name:"color"
+        })
+    color:string | null;
+        
+
+    @Column("character varying",{ 
+        nullable:true,
+        length:255,
+        name:"photo"
+        })
+    photo:string | null;
+        
+
+    @Column("character varying",{ 
+        nullable:false,
+        length:60,
+        name:"name"
+        })
+    name:string;
+        
+
+    @Column("double precision",{ 
+        nullable:true,
+        precision:53,
+        name:"longitude"
+        })
+    longitude:number | null;
+        
 
    
     @OneToMany(type=>catalog, catalog=>catalog.fk_place,{ onDelete: 'CASCADE' ,onUpdate: 'CASCADE' })

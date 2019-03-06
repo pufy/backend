@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { place } from '../entities/place';
+import { user } from '../entities/user';
+import { member } from '../entities/member';
 import { session_spotify } from '../entities/session_spotify';
 import { place_filter } from '../entities/place_filter';
 import { CommonModule } from '../common/common.module';
@@ -14,7 +16,7 @@ import { QueueGateway } from './gateways/queue.gateway';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([place, session_spotify, place_filter]),
+    TypeOrmModule.forFeature([place, session_spotify, place_filter, user, member]),
     CommonModule
   ],
   controllers: [PlayerController],

@@ -13,25 +13,19 @@ export class catalog {
     id:string;
         
 
+    @Column("character varying",{ 
+        nullable:true,
+        length:100,
+        name:"description"
+        })
+    description:string | null;
+        
+
    
     @ManyToOne(type=>catalog_category, catalog_category=>catalog_category.catalogs,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
     @JoinColumn({ name:'fk_category'})
     fk_category:catalog_category | null;
 
-
-   
-    @ManyToOne(type=>place, place=>place.catalogs,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
-    @JoinColumn({ name:'fk_place'})
-    fk_place:place | null;
-
-
-    @Column("character varying",{ 
-        nullable:false,
-        length:60,
-        name:"name"
-        })
-    name:string;
-        
 
     @Column("character varying",{ 
         nullable:true,
@@ -41,12 +35,17 @@ export class catalog {
     photo:string | null;
         
 
-    @Column("character varying",{ 
-        nullable:true,
-        length:100,
-        name:"description"
+   
+    @ManyToOne(type=>place, place=>place.catalogs,{  nullable:false,onDelete: 'CASCADE',onUpdate: 'CASCADE' })
+    @JoinColumn({ name:'fk_place'})
+    fk_place:place | null;
+
+
+    @Column("timestamp without time zone",{ 
+        nullable:false,
+        name:"date_register"
         })
-    description:string | null;
+    date_register:Date;
         
 
     @Column("numeric",{ 
@@ -58,10 +57,11 @@ export class catalog {
     price:string | null;
         
 
-    @Column("timestamp without time zone",{ 
+    @Column("character varying",{ 
         nullable:false,
-        name:"date_register"
+        length:60,
+        name:"name"
         })
-    date_register:Date;
+    name:string;
         
 }
